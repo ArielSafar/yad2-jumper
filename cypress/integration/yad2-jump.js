@@ -4,6 +4,14 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 	return false
   })
 
+  export function isExists(element) {
+    cy.get('body').then((body) => {
+        if (body.find(element).length > 0) {
+            cy.get(element).click();
+        }
+    });
+}
+
 describe('Tab Handling Anchor Links', function () {
 	beforeEach(function () {
 		cy.visit('https://www.yad2.co.il/')
@@ -23,11 +31,8 @@ describe('Tab Handling Anchor Links', function () {
 			cy.get('div.content-wrapper.active').each((category) => {
 				category.click();
 
-				try {
-					const modalClostButton = cy.get('#sLightbox_container .closeToolTipIframe');
-					modalClostButton.click();
-				}
-				catch(err) {
+				if(isExists('#sLightbox_container .closeToolTipIframe')) {
+					cy.get('#sLightbox_container .closeToolTipIframe').click();
 				}
 
 				cy.get('tbody > tr.item').each((item) => {
